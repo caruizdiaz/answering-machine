@@ -1,0 +1,25 @@
+***** ANSWERING MACHINE *****
+*                           *
+* Author: caruizdiaz        *
+* carlos.ruizdiaz@gmail.com *
+*                           *
+*****************************
+
+ABOUT
+
+This project uses a Huawei modem with voice capabilities to play a raw audio file when
+a call is received. The basic operation is as follows:
+
+1. Loop checking for an incoming call.
+2. Pick up call if it's ringing.
+3. Set audio port.
+4. Play audio file.
+5. Hung up.
+6. Go back to step 1.
+
+SUPPORTED MODEMS
+
+The following modems are known to be supported, but it should work with every Huawei modem with voice support.
+
+- E160
+- E177
