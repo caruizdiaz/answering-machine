@@ -18,6 +18,8 @@ This project uses a Huawei modem with voice capabilities to play a raw audio fil
 
 Once you clone the repo, you can import the files as an Eclipse project.
 
+For more info please visit http://caruizdiaz.com/?p=294
+
 SUPPORTED MODEMS
 
 The following modems are known to be supported, but it should work with every Huawei modem with voice capabilities.
