@@ -30,22 +30,30 @@ int main(int argc, char **argv)
 {
 	at_cvoice_resp_t *cvoice = malloc(sizeof(at_cvoice_resp_t));
 
-	sscanf("AT^CVOICE\r\n^CVOICE:0,8000,16,20\r\nOK\r\n", "AT^CVOICE\r\n^CVOICE:%d,%d,%d,%d", &cvoice->mode,
+	sscanf("AT^CVOICE\r\n^CVOICE:0,8000,16,20\r\nOK\r\n\0", "AT^CVOICE\r\n^CVOICE:%d,%d,%d,%d", &cvoice->mode,
 															&cvoice->sampling_rate,
 															&cvoice->data_bit,
-															&cvoice->frame_period);
+															&cvoice->ptime);
 	LOG(L_DEBUG, "%s: CVOICE -> sampling rate=%d data_bit=%d frame_period=%d\n", __FUNCTION__,
 																					cvoice->sampling_rate,
 																						cvoice->data_bit,
-																						cvoice->frame_period);
+																						cvoice->ptime);
 
-	//return;
+	at_io_t io;
+
+	at_cvoice_query_all(&io.at_cmd);
+
+	/*io.response.s = "AT^CVOICE\r\n^CVOICE:0,8000,16,20\r\nOK\r\n";
+	io.response.len	= 44;
+
+	at_cvoice_parse_response(&io, cvoice);
+
+	//return 0;*/
 	port_t data_port, audio_port;
 	pcm_data_t audio;
 
 	if (argc != 4)
 	{
-
 		print_usage();
 		exit(1);
 	}
@@ -105,7 +113,7 @@ static _bool get_pcm_frames(char *audio_file, pcm_data_t *audio)
 
 	if ((bytes_read	= fread(audio->data, 1, file_length, file)) != file_length)
 	{
-		printf("br %d, l %d\n", bytes_read, file_length);
+		//printf("br %d, l %d\n", bytes_read, file_length);
 		LOG(L_ERROR, "%s: couldn't read the whole audio file. %s\n", __FUNCTION__, strerror(errno));
 		return FALSE;
 	}
@@ -136,7 +144,7 @@ static _bool get_modem_frame_rate(port_t *port)
 		return FALSE;
 	}
 
-	port->frame_period	= cvoice.frame_period;
+	port->frame_period	= cvoice.ptime;
 
 	return TRUE;
 }
@@ -172,7 +180,7 @@ static void check_modem(port_t *data_port, port_t *audio_port, pcm_data_t *audio
 		at_io_t io;
 		at_clcc_resp_t clcc;
 
-		sleep(2);
+		sleep(1);
 
 		at_clcc_query_all(&io.at_cmd);
 
@@ -222,7 +230,7 @@ static void check_modem(port_t *data_port, port_t *audio_port, pcm_data_t *audio
 
 			play_message(audio_port, audio);
 
-			at_chup_assign(NULL, &io);
+			at_chup_assign(NULL, &io.at_cmd);
 
 			if (!modem_write(data_port, &io))
 				continue;

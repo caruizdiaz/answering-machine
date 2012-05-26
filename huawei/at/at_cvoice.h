@@ -11,14 +11,14 @@
 #include "../../util.h"
 #include "../modem.h"
 
-#define CVOICE_QUERY_ALL_PATTERN "^CVOICE:([0-9]+),([0-9]+),([0-9]+),([0-9]+)"
+#define CVOICE_QUERY_ALL_PATTERN "CVOICE:([0-9]+),([0-9]+),([0-9]+),([0-9]+)"
 
 typedef struct at_cvoice_resp
 {
 	int mode;
 	int sampling_rate;
 	int data_bit;
-	int frame_period;
+	int ptime;
 } at_cvoice_resp_t;
 
 void at_cvoice_assign(str_t *value, at_command_t *cmd);
